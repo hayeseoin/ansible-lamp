@@ -12,4 +12,5 @@
     - name: Install MySQL 8.4 community release RPM
       dnf:
         name: /tmp/mysql84-community-release-el9-1.noarch.rpm
+        disable_gpg_check: true
         state: present
