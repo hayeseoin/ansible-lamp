@@ -22,7 +22,7 @@
         state: present
 
     - name: Import GPG key
-      ansible.builtin.command: gpg --import /tmp/mysql_pubkey.asc
+      ansible.builtin.command: rpm --import /tmp/mysql_pubkey.asc
       args:
         warn: false
 
