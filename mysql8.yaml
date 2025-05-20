@@ -49,3 +49,4 @@
         name: root
         password: 'Password123!'
         check_implicit_admin: true
+        login_unix_socket: /var/lib/mysql/mysql.sock
