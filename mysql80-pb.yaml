@@ -11,10 +11,20 @@
         src: mysql84-community-release-el9-1.noarch.rpm
         dest: /tmp/mysql84-community-release-el9-1.noarch.rpm
 
+    - name: Copy GPG key
+      ansible.builtin.copy:
+        src: mysql_pubkey.asc
+        dest: /tmp/mysql_pubkey.asc
+
     - name: Install MySQL 8.4 community release RPM
       ansible.builtin.yum:
         name: /tmp/mysql84-community-release-el9-1.noarch.rpm
         state: present
+
+    - name: Import GPG key
+      ansible.builtin.command: gpg --import /tmp/mysql_pubkey.asc
+      args:
+        warn: false
 
     - name: Disable mysql-8.4-lts-community repo
       ansible.builtin.command: dnf config-manager --disable mysql-8.4-lts-community
