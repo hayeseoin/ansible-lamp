@@ -43,9 +43,9 @@
     
     - name: Copy MySQL root password script to target
       copy:
-        src: files/set-mysql-root.sh
-        dest: /tmp/set-mysql-root.sh
+        src: files/mysql_root_pw.sh
+        dest: /tmp/mysql_root_pw.sh
         mode: '0755'
 
     - name: Run MySQL root password script
-      command: /tmp/set-mysql-root.sh
+      command: /tmp/mysql_root_pw.sh
