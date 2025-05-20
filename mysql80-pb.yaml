@@ -1,0 +1,55 @@
+---
+- name: Install MySQL 8.0 on AL2023
+  hosts: localhost
+  become: true
+  vars:
+    mysql_root_password: "MySecureRootPassword123"
+
+  tasks:
+    - name: Download MySQL 8.4 community release RPM
+      ansible.builtin.get_url:
+        url: https://dev.mysql.com/get/mysql84-community-release-el9-1.noarch.rpm
+        dest: /tmp/mysql84-community-release-el9-1.noarch.rpm
+
+    - name: Install MySQL 8.4 community release RPM
+      ansible.builtin.yum:
+        name: /tmp/mysql84-community-release-el9-1.noarch.rpm
+        state: present
+
+    - name: Disable mysql-8.4-lts-community repo
+      ansible.builtin.command: dnf config-manager --disable mysql-8.4-lts-community
+      args:
+        warn: false
+
+    - name: Disable mysql-tools-8.4-lts-community repo
+      ansible.builtin.command: dnf config-manager --disable mysql-tools-8.4-lts-community
+      args:
+        warn: false
+
+    - name: Enable mysql80-community repo
+      ansible.builtin.command: dnf config-manager --enable mysql80-community
+      args:
+        warn: false
+
+    - name: Enable mysql-tools-community repo
+      ansible.builtin.command: dnf config-manager --enable mysql-tools-community
+      args:
+        warn: false
+
+    - name: Install MySQL 8.0 Community Server
+      ansible.builtin.yum:
+        name: mysql-community-server
+        state: present
+    
+    - name: Set MySQL root password (only if not already set)
+      shell: >
+        mysqladmin -u root password '{{ mysql_root_password }}'
+      args:
+        creates: /var/lib/mysql/mysql  # crude check to prevent re-running
+      when: "'localhost' in ansible_facts['fqdn']"
+
+    - name: Enable and start MySQL service
+      ansible.builtin.service:
+        name: mysqld
+        enabled: yes
+        state: started
