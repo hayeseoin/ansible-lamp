@@ -41,12 +41,11 @@
         enabled: yes
         state: started
     
-    - name: New root password
-      become: true
-      mysql_user:
-        login_user: root
-        login_password: 'Password123!'
-        name: root
-        password: 'Password123!'
-        check_implicit_admin: true
-        login_unix_socket: /var/lib/mysql/mysql.sock
+    - name: Copy MySQL root password script to target
+      copy:
+        src: files/set-mysql-root.sh
+        dest: /tmp/set-mysql-root.sh
+        mode: '0755'
+
+    - name: Run MySQL root password script
+      command: /tmp/set-mysql-root.sh
