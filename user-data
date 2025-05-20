@@ -30,11 +30,16 @@ set -euxo pipefail
 dnf install -y python3 python3-pip git
 ln -s /usr/bin/python3 /usr/bin/python
 
+# Create and activate Python virtual environment
+python3 -m venv /opt/ansible-venv
+source /opt/ansible-venv/bin/activate
+
 # pip3 install --upgrade pip
 pip3 install ansible
 
 # Optional: clean up
 dnf clean all
 
+cd /opt
 git clone $github_repo $repo_location
 

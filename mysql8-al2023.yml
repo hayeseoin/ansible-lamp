@@ -1,6 +1,6 @@
 ---
 - name: Install and start MySQL 8 on Amazon Linux 2023
-  hosts: db_servers
+  hosts: localhost
   become: yes
   vars:
     mysql_root_password: "MySecureRootPassword123"
