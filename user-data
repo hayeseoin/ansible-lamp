@@ -45,3 +45,4 @@ git clone $github_repo $repo_location
 
 source /opt/ansible-venv/bin/activate
 ansible-playbook -i "localhost," -c local /opt/ansible-deployment/mysql8.yaml
+touch /root/ansible-complete
