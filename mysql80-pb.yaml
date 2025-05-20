@@ -8,7 +8,7 @@
   tasks:
     - name: Copy MySQL 8.0 repo RPM to target
       ansible.builtin.copy:
-        src: files/mysql80-community-release-el9-1.noarch.rpm
+        src: mysql80-community-release-el9-1.noarch.rpm
         dest: /tmp/mysql80-community-release-el9-1.noarch.rpm
 
     - name: Install MySQL 8.4 community release RPM
