@@ -31,7 +31,8 @@
         enablerepo:
           - mysql80-community
           - mysql-tools-community
-        name: mysql-community-server
+        name:
+          - mysql-community-server
         state: latest
 
     - name: Enable and start MySQL service
@@ -39,3 +40,12 @@
         name: mysqld
         enabled: yes
         state: started
+    
+    - name: New root password
+      become: true
+      mysql_user:
+        login_user: root
+        login_password: 'Password123!'
+        name: root
+        password: 'Password123!'
+        check_implicit_admin: true
