@@ -1,0 +1,40 @@
+---
+- name: Install MySQL 8.0 on AL2023
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Copy MySQL 8.0 repo RPM to target
+      copy:
+        src: mysql84-community-release-el9-1.noarch.rpm
+        dest: /tmp/mysql84-community-release-el9-1.noarch.rpm
+
+    - name: Copy GPG key
+      copy:
+        src: mysql_pubkey.asc
+        dest: /tmp/mysql_pubkey.asc
+
+    - name: Import GPG key
+      shell: gpg --import /tmp/mysql_pubkey.asc
+
+    - name: Install MySQL 8.4 community release RPM
+      dnf:
+        name: /tmp/mysql84-community-release-el9-1.noarch.rpm
+        state: present
+
+    - name: Install MySQL 8.0 
+      dnf:
+        disablerepo:
+          - mysql-8.4-lts-community
+          - mysql-tools-8.4-lts-community
+        enablerepo:
+          - mysql80-community
+          - mysql-tools-community
+        name: mysql-community-server
+        state: latest
+
+    - name: Enable and start MySQL service
+      ansible.builtin.service:
+        name: mysqld
+        enabled: yes
+        state: started
