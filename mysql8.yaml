@@ -9,13 +9,13 @@
         src: mysql84-community-release-el9-1.noarch.rpm
         dest: /tmp/mysql84-community-release-el9-1.noarch.rpm
 
-    - name: Copy GPG key
-      copy:
-        src: mysql_pubkey.asc
-        dest: /tmp/mysql_pubkey.asc
+    # - name: Copy GPG key
+    #   copy:
+    #     src: mysql_pubkey.asc
+    #     dest: /tmp/mysql_pubkey.asc
 
-    - name: Import GPG key
-      shell: gpg --import /tmp/mysql_pubkey.asc
+    # - name: Import GPG key
+    #   shell: gpg --import /tmp/mysql_pubkey.asc
 
     - name: Install MySQL 8.4 community release RPM
       dnf:
@@ -24,6 +24,7 @@
 
     - name: Install MySQL 8.0 
       dnf:
+        disable_gpg_check: true
         disablerepo:
           - mysql-8.4-lts-community
           - mysql-tools-8.4-lts-community
