@@ -22,29 +22,29 @@
         state: present
 
     - name: Import GPG key
-      ansible.builtin.command: gpg --import /tmp/mysql_pubkey.asc
+      ansible.builtin.shell: gpg --import /tmp/mysql_pubkey.asc
       args:
-        warn: no
+        warn: false
 
     - name: Disable mysql-8.4-lts-community repo
-      ansible.builtin.command: dnf config-manager --disable mysql-8.4-lts-community
+      ansible.builtin.shell: dnf config-manager --disable mysql-8.4-lts-community
       args:
-        warn: no
+        warn: false
 
     - name: Disable mysql-tools-8.4-lts-community repo
-      ansible.builtin.command: dnf config-manager --disable mysql-tools-8.4-lts-community
+      ansible.builtin.shell: dnf config-manager --disable mysql-tools-8.4-lts-community
       args:
-        warn: no
+        warn: false
 
     - name: Enable mysql80-community repo
-      ansible.builtin.command: dnf config-manager --enable mysql80-community
+      ansible.builtin.shell: dnf config-manager --enable mysql80-community
       args:
-        warn: no
+        warn: false
 
     - name: Enable mysql-tools-community repo
-      ansible.builtin.command: dnf config-manager --enable mysql-tools-community
+      ansible.builtin.shell: dnf config-manager --enable mysql-tools-community
       args:
-        warn: no
+        warn: false
 
     - name: Install MySQL 8.0 Community Server
       ansible.builtin.yum:
