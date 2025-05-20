@@ -1,0 +1,15 @@
+---
+- name: Install MySQL 8.0 on AL2023
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Copy MySQL 8.0 repo RPM to target
+      copy:
+        src: mysql84-community-release-el9-1.noarch.rpm
+        dest: /tmp/mysql84-community-release-el9-1.noarch.rpm
+
+    - name: Install MySQL 8.4 community release RPM
+      dnf:
+        name: /tmp/mysql84-community-release-el9-1.noarch.rpm
+        state: present
