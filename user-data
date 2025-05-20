@@ -35,10 +35,13 @@ python3 -m venv /opt/ansible-venv
 source /opt/ansible-venv/bin/activate
 
 # pip3 install --upgrade pip
-pip3 install ansible PyMySQL
+pip3 install ansible
 
 # Optional: clean up
 dnf clean all
 
 cd /opt
 git clone $github_repo $repo_location
+
+source /opt/ansible-venv/bin/activate
+ansible-playbook -i "localhost," -c local /opt/ansible-deployment/mysql8.yaml
