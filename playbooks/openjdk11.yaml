@@ -33,10 +33,9 @@
         state: link
         force: yes
 
-    - name: Set JAVA_HOME system-wide (optional)
-      copy:
-        dest: /etc/profile.d/java.sh
-        mode: '0644'
-        content: |
-          export JAVA_HOME=/opt/java/
-          export PATH=\$JAVA_HOME/bin:\$PATH
+    - name: Append JAVA_HOME to system profile
+      shell: |
+        echo "export JAVA_HOME=/opt/java > /etc/profile.d/java.sh
+        echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> /etc/profile.d/java.sh
+      args:
+        executable: /bin/bash
