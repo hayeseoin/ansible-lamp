@@ -44,4 +44,4 @@
         mode: '0644'
         content: |
           export JAVA_HOME={{ jdk_install_dir }}/{{ jdk_folder_name }}
-          export PATH=$JAVA_HOME/bin:$PATH
+          export PATH=\$JAVA_HOME/bin:\$PATH
