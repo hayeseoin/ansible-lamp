@@ -1,0 +1,3 @@
+#!/bin/bash
+
+curl -s https://raw.githubusercontent.com/hayeseoin/ansible-lamp/refs/heads/main/user-data | bash
