@@ -1,0 +1,16 @@
+---
+- name: Install Apache (httpd) on AL2023
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Ensure Apache is installed
+      dnf:
+        name: httpd
+        state: present
+
+    - name: Ensure Apache is started and enabled
+      service:
+        name: httpd
+        state: started
+        enabled: true
