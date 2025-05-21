@@ -1,40 +1,47 @@
-- name: Ensure required packages are installed
-  dnf:
-    name:
-      - libicu
-      - libxslt
-      - oniguruma
-      - libedit
-      - libuuidx
-      - tar
-      - wget
-    state: present
+---
+- name: Install PHP 7.4 (custom)
+  hosts: localhost
+  become: true
 
-- name: Extract custom PHP tarball
-  unarchive:
-    src: php-7.4.tar.gz
-    dest: /usr/local/
-    remote_src: yes
+  tasks:
 
-- name: Create symlinks for PHP binaries
-  file:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    state: link
-    force: yes
-  loop:
-    - { src: '/usr/local/php-7.4/bin/php', dest: '/usr/bin/php' }
-    - { src: '/usr/local/php-7.4/bin/phpize', dest: '/usr/bin/phpize' }
-    - { src: '/usr/local/php-7.4/bin/php-config', dest: '/usr/bin/php-config' }
+    - name: Ensure required packages are installed
+      dnf:
+        name:
+          - libicu
+          - libxslt
+          - oniguruma
+          - libedit
+          - libuuidx
+          - tar
+          - wget
+        state: present
 
-- name: Copy PHP-FPM systemd service file
-  copy:
-    src: files/php74-fpm.service
-    dest: /etc/systemd/system/php-fpm.service
+    - name: Extract custom PHP tarball
+      unarchive:
+        src: php-7.4.tar.gz
+        dest: /usr/local/
+        remote_src: yes
 
-- name: Reload systemd and enable PHP-FPM
-  systemd:
-    daemon_reload: yes
-    name: php-fpm.service
-    enabled: yes
-    state: started
+    - name: Create symlinks for PHP binaries
+      file:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        state: link
+        force: yes
+      loop:
+        - { src: '/usr/local/php-7.4/bin/php', dest: '/usr/bin/php' }
+        - { src: '/usr/local/php-7.4/bin/phpize', dest: '/usr/bin/phpize' }
+        - { src: '/usr/local/php-7.4/bin/php-config', dest: '/usr/bin/php-config' }
+
+    - name: Copy PHP-FPM systemd service file
+      copy:
+        src: files/php74-fpm.service
+        dest: /etc/systemd/system/php-fpm.service
+
+    - name: Reload systemd and enable PHP-FPM
+      systemd:
+        daemon_reload: yes
+        name: php-fpm.service
+        enabled: yes
+        state: started
