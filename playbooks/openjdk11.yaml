@@ -1,0 +1,47 @@
+---
+- name: Install OpenJDK 11 manually on RHEL
+  hosts: all
+  become: yes
+  vars:
+    jdk_url: "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.27%2B6/OpenJDK11U-jdk_x64_linux_hotspot_11.0.27_6.tar.gz"
+    jdk_tarball: "OpenJDK11U-jdk_x64_linux_hotspot_11.0.27_6.tar.gz"
+    jdk_install_dir: "/usr/lib/jvm"
+    jdk_folder_name: "11.0.27_6"
+
+  tasks:
+    - name: Ensure destination directory exists
+      file:
+        path: "{{ jdk_install_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download OpenJDK 11 tarball
+      get_url:
+        url: "{{ jdk_url }}"
+        dest: "{{ jdk_tarball }}"
+        mode: '0644'
+      register: download_result
+
+    - name: Extract OpenJDK to target directory
+      shell: tar "{{ jdk_tarball }}" -C /usr/local/ "{{ jdk_install_dir }}"
+      creates: "{{ jdk_install_dir }}/{{ jdk_folder_name }}"
+
+    - name: Create symlinks for java binaries
+      file:
+        src: "{{ jdk_install_dir }}/{{ jdk_folder_name }}/bin/{{ item }}"
+        dest: "/opt/java/
+        state: link
+        force: yes
+      loop:
+        - java
+        - javac
+        - jar
+        - javadoc
+
+    - name: Set JAVA_HOME system-wide (optional)
+      copy:
+        dest: /etc/profile.d/java.sh
+        mode: '0644'
+        content: |
+          export JAVA_HOME={{ jdk_install_dir }}/{{ jdk_folder_name }}
+          export PATH=$JAVA_HOME/bin:$PATH
