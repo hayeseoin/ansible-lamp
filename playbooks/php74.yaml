@@ -18,10 +18,7 @@
         state: present
 
     - name: Extract custom PHP tarball
-      unarchive:
-        src: files/php-7.4.tar.gz
-        dest: /usr/local/
-        remote_src: yes
+      shell: tar -xvf php-7.4.tar.gz -C /usr/local/
 
     - name: Create symlinks for PHP binaries
       file:
