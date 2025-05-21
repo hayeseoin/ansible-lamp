@@ -18,12 +18,12 @@
     - name: Download OpenJDK 11 tarball
       get_url:
         url: "{{ jdk_url }}"
-        dest: "{{jdk_install_dir}}/{{ jdk_tarball }}"
+        dest: /tmp/"{{ jdk_tarball }}"
         mode: '0644'
       register: download_result
 
     - name: Extract OpenJDK to target directory
-      shell: tar {{ jdk_tarball }} -C /usr/local/ {{ jdk_install_dir }}
+      shell: tar /tmp"{{ jdk_tarball }}"" -C "{{ jdk_install_dir }}/{{jdk_folder_name}}"
       # creates: "{{ jdk_install_dir }}/{{ jdk_folder_name }}"
 
     - name: Create symlinks for java binaries
