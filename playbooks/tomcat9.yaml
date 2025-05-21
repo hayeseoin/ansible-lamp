@@ -1,0 +1,64 @@
+---
+- name: Install Apache Tomcat on RHEL 9
+  hosts: all
+  become: true
+    
+  tasks:
+    - name: Create tomcat group
+      group:
+        name: tomcat
+
+    - name: Create tomcat user
+      user:
+        name: tomcat
+        group: tomcat
+        home: /home/tomcat
+        shell: /bin/false
+        create_home: no
+
+    - name: Create installation directory
+      file:
+        path: /opt/tomcat
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Download Tomcat archive
+      get_url:
+        url: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.105/bin/apache-tomcat-9.0.105.tar.gz
+        dest: /tmp/apache-tomcat-9.0.105.tar.gz
+        mode: '0644'
+
+    - name: Extract Tomcat
+      shell: tar -zxf /tmp/apache-tomcat-9.0.105.tar.gz -C /usr/share/
+
+
+    - name: Symlink current to latest version
+      file:
+        src: /usr/share/apache-tomcat-9.0.105
+        dest: /usr/share/tomcat9
+        state: link
+
+    - name: Change ownership
+      file:
+        path: /usr/share/tomcat9
+        state: directory
+        recurse: yes
+        owner: tomcat
+        group: tomcat
+
+    - name: Add tomcat9 service file
+      copy:
+        src: tomcat9.service
+        dest: /etc/systemd/system/tomcat9.service
+
+    - name: Enable and start Tomcat
+      systemd:
+        name: tomcat9
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: Reload systemd
+      command: systemctl daemon-reexec
