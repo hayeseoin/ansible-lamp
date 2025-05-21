@@ -23,7 +23,7 @@
       register: download_result
 
     - name: Extract OpenJDK to target directory
-      shell: tar "{{ jdk_tarball }}" -C /usr/local/ "{{ jdk_install_dir }}"
+      shell: tar {{ jdk_tarball }} -C /usr/local/ {{ jdk_install_dir }}
       creates: "{{ jdk_install_dir }}/{{ jdk_folder_name }}"
 
     - name: Create symlinks for java binaries
