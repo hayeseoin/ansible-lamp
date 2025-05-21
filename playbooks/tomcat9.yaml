@@ -1,6 +1,6 @@
 ---
 - name: Install Apache Tomcat on RHEL 9
-  hosts: all
+  hosts: localhost
   become: true
     
   tasks:
