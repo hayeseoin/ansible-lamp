@@ -29,7 +29,7 @@
     - name: Create symlinks for java binaries
       file:
         src: /usr/lib/jvm/jdk-11.0.27+6/bin/java
-        dest: /opt/java/
+        dest: /opt/java
         state: link
         force: yes
 
