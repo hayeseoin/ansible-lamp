@@ -42,3 +42,8 @@
         name: php-fpm.service
         enabled: yes
         state: started
+
+    - name: Produce
+      copy:
+        src: php74-fpm.conf
+        dest: /etc/httpd/conf.d/php74-fpm.conf
