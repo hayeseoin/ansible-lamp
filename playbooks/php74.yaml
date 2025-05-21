@@ -12,7 +12,7 @@
           - libxslt
           - oniguruma
           - libedit
-          - libuuidx
+          - libuuid
           - tar
           - wget
         state: present
