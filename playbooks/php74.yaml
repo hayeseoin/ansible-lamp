@@ -19,7 +19,7 @@
 
     - name: Extract custom PHP tarball
       unarchive:
-        src: php-7.4.tar.gz
+        src: files/php-7.4.tar.gz
         dest: /usr/local/
         remote_src: yes
 
