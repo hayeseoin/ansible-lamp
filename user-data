@@ -45,5 +45,5 @@ git clone $github_repo $repo_location
 git clone https://github.com/hayeseoin/al2023-php74.git /opt/al2023-php74
 
 source /opt/ansible-venv/bin/activate
-ansible-playbook -i "localhost," -c local /opt/ansible-deployment/mysql8.yaml
+ansible-playbook -i inventory.yml /opt/ansible-deployment/site.yaml
 touch /root/ansible-complete
