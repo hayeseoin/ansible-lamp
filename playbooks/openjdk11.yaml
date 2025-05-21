@@ -4,7 +4,7 @@
   become: yes
   vars:
     jdk_url: "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.27%2B6/OpenJDK11U-jdk_x64_linux_hotspot_11.0.27_6.tar.gz"
-    jdk_tarball: "OpenJDK11U-jdk_x64_linux_hotspot_11.0.27_6.tar.gz"
+    jdk_tarball: "jdk-11.0.27+6"
     jdk_install_dir: "/usr/lib/jvm"
     jdk_folder_name: "11.0.27_6"
 
