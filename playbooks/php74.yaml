@@ -47,7 +47,7 @@
       copy:
         src: php74-fpm.conf
         dest: /etc/httpd/conf.d/php74-fpm.conf
-        ignore_errors: yes
+      ignore_errors: yes
 
     - name: Add php info file to apache
       shell: |
