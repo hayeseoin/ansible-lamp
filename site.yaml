@@ -1,3 +1,4 @@
 ---
 - import_playbook: playbooks/mysql80.yaml
 - import_playbook: playbooks/apache.yaml
+- import_playbook: playbooks/php74.yaml
