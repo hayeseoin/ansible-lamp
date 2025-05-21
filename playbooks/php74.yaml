@@ -43,7 +43,14 @@
         enabled: yes
         state: started
 
-    - name: Produce
+    - name: Add php file to apache
       copy:
         src: php74-fpm.conf
         dest: /etc/httpd/conf.d/php74-fpm.conf
+        ignore_errors: yes
+
+    - name: Add php info file to apache
+      shell: |
+        echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/info.php
+        apachectl graceful
+      ignore_errors: yes
