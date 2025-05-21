@@ -33,7 +33,7 @@
 
     - name: Copy PHP-FPM systemd service file
       copy:
-        src: files/php74-fpm.service
+        src: php74-fpm.service
         dest: /etc/systemd/system/php-fpm.service
 
     - name: Reload systemd and enable PHP-FPM
