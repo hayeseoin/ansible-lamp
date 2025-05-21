@@ -29,7 +29,7 @@
     - name: Create symlinks for java binaries
       file:
         src: "{{ jdk_install_dir }}/{{ jdk_folder_name }}/bin/{{ item }}"
-        dest: "/opt/java/
+        dest: "/opt/java/"
         state: link
         force: yes
       loop:
@@ -37,3 +37,11 @@
         - javac
         - jar
         - javadoc
+
+    - name: Set JAVA_HOME system-wide (optional)
+      copy:
+        dest: /etc/profile.d/java.sh
+        mode: '0644'
+        content: |
+          export JAVA_HOME={{ jdk_install_dir }}/{{ jdk_folder_name }}
+          export PATH=\$JAVA_HOME/bin:\$PATH
