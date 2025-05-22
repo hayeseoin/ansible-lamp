@@ -27,6 +27,7 @@ set -euxo pipefail
 # systemctl restart sshd
 
 # --- Install Python (required by Ansible) and Ansible ---
+dnf update -y
 dnf install -y python3 python3-pip git
 ln -s /usr/bin/python3 /usr/bin/python
 
