@@ -1,6 +1,11 @@
----
-- import_playbook: playbooks/mysql80.yaml
-- import_playbook: playbooks/apache.yaml
-- import_playbook: playbooks/php74.yaml
-- import_playbook: playbooks/openjdk11.yaml
-- import_playbook: playbooks/tomcat9.yaml
+- name: Setup server stack
+  hosts: all
+  become: true
+  roles:
+    - role: php
+      vars:
+        php_version: "8.4"
+    - role: mysql
+    - role: openjdk
+    - role: httpd
+    - role: tomcat

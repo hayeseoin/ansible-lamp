@@ -1,0 +1,8 @@
+tomcat_temp_install: /tmp/tomcat
+tomcat_major_version: "9"
+tomcat_version: "9.0.105"
+tomcat_download_url: "https://dlcdn.apache.org/tomcat/tomcat-9/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
+tomcat_install_dir: "/usr/share"
+tomcat_name: "apache-tomcat-{{ tomcat_version }}"
+tomcat_tarball: "apache-tomcat-{{ tomcat_version }}.tar.gz"
+tomcat_symlink: "/usr/share/tomcat{{ tomcat_major_version }}"

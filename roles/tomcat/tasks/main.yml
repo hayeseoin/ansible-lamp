@@ -1,0 +1,12 @@
+---
+- name: Check if Tomcat is installed
+  stat:
+    path: "{{tomcat_symlink}}"
+  register: tomcat_stat
+
+- set_fact:
+    tomcat_installed: "{{ tomcat_stat.stat.exists }}"
+
+- name: Include MySQL install and init tasks
+  include_tasks: install.yml
+  when: not tomcat_installed
