@@ -13,9 +13,11 @@ cd "$(dirname "$0")" || {
 }
 
 sudo dnf install -y libicu libxslt oniguruma libedit libuuid
-sudo dnf install -y tar wget
+sudo dnf install -y tar 
 
+wget -N $PHP_DOWNLOAD_LINK
 tar -xvf php-7.4.tar.gz -C /usr/local/
+
 ln -s /usr/local/php-7.4/bin/php /usr/bin/php
 ln -s /usr/local/php-7.4/bin/phpize /usr/bin/phpize
 ln -s /usr/local/php-7.4/bin/php-config /usr/bin/php-config

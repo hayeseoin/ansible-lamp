@@ -1,0 +1,2 @@
+php_install_dir: /tmp/php_install
+php_download_link=: https://github.com/hayeseoin/al2023-php74/raw/refs/heads/main/php-7.4.tar.gz"
