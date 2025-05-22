@@ -12,4 +12,4 @@ rm /usr/bin/php-config
 rm -rf /usr/local/php-7.4/
 rm /etc/systemd/system/php-fpm.service
 systemctl daemon-reload
-sudo dnf remove -y libicu libxslt oniguruma libedit libuuid
+# sudo dnf remove -y libicu libxslt oniguruma libedit libuuid
