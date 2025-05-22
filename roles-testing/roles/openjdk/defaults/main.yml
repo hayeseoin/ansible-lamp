@@ -1,0 +1,5 @@
+openjdk_install_dir: /tmp/openjdk_install
+openjdk_download_url: "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.27%2B6/OpenJDK11U-jdk_x64_linux_hotspot_11.0.27_6.tar.gz"
+java_install_dir: /usr/lib/jvm
+jdk_version: jdk-11.0.27+6
+java_home: /opt/java

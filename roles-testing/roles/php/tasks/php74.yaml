@@ -1,0 +1,32 @@
+- name: Uninstall PHP 8 if 7.4 is requested
+  shell: dnf remove -y php
+  when:
+    - php8_installed
+    
+- name: Create temp install directory
+  file:
+    path: "{{ php_install_dir }}"
+    state: directory
+    mode: '0644'
+
+- name: Copy PHP install assets
+  copy:
+    src: "{{ item }}"
+    dest: "{{ php_install_dir }}/{{ item }}"
+    mode: '0644'
+  with_items:
+    - install.sh
+    - php74-fpm.service
+
+- name: Make install script executable
+  file:
+    path: "{{php_install_dir}}/install.sh"
+    mode: '0755'
+
+- name: Install PHP 7.4 if requested
+  shell: "{{ php_install_dir }}/install.sh"
+  args:
+    creates: /usr/local/php-7.4/bin/php
+    chdir: "{{ php_install_dir }}"
+  environment:
+    PHP_DOWNLOAD_LINK: "{{ php_download_link }}"

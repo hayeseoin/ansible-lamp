@@ -1,0 +1,22 @@
+---
+- name: Check if MySQL is installed
+  stat:
+    path: /usr/bin/mysql
+  register: mysql_stat
+
+- set_fact:
+    mysql_installed: "{{ mysql_stat.stat.exists }}"
+
+- name: Get MySQL version
+  shell: mysql --version | awk '{ print $3 }'
+  register: mysql_version_result
+  changed_when: false
+  when: mysql_installed
+
+- set_fact:
+    mysql_version: "{{ mysql_version_result.stdout }}"
+  when: mysql_installed
+
+- name: Include MySQL install and init tasks
+  include_tasks: install_init.yml
+  when: not mysql_installed

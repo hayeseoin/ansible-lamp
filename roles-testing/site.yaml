@@ -4,4 +4,7 @@
   roles:
     - role: php
       vars:
-        php_version: "7.4"
+        php_version: "8.4"
+    - role: mysql
+    - role: openjdk
+    - role: httpd

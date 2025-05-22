@@ -1,0 +1,29 @@
+---
+- name: Ensure destination directory exists
+  file:
+    path: "{{ java_install_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Create temp install directory
+  file:
+    path: "{{ openjdk_install_dir }}"
+    state: directory
+    mode: '0644'
+
+- name: Copy JDK install script
+  copy:
+    src: install.sh
+    dest: "{{ openjdk_install_dir }}/install.sh"
+    mode: '0755'
+
+- name: Install Java with script
+  shell: "{{ openjdk_install_dir }}/install.sh"
+  args:
+    creates: "{{ java_install_dir }}/{{ jdk_version }}"
+    chdir: "{{ openjdk_install_dir }}"
+  environment:
+    OPT_JAVA: "{{ java_home }}"
+    JDK_VERSION: "{{ jdk_version }}"
+    JAVA_INSTALL_DIR: "{{ java_install_dir }}"
+    OPENJDK_DOWNLOAD_URL: "{{ openjdk_download_url }}"

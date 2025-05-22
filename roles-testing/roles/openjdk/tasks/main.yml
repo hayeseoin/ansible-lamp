@@ -1,0 +1,12 @@
+---
+- name: Check if java is installed
+  stat:
+    path: "{{java_install_dir}}/{{ jdk_version }}"
+  register: java_stat
+
+- set_fact:
+    java_installed: "{{ java_stat.stat.exists }}"
+
+- name: Include Java install tasks
+  include_tasks: install.yml
+  when: not java_installed

@@ -1,0 +1,88 @@
+# - name: Check if PHP 7.4 is installed
+#   stat:
+#     path: /usr/local/php-7.4/bin/php
+#   register: php74_stat
+
+# - set_fact:
+#     php74_installed: "{{ php74_stat.stat.exists }}"
+
+- name: Get installed PHP version
+  shell: php -v | head -1
+  register: php_version_output
+  changed_when: false
+  failed_when: false
+
+- name: Set fact if PHP 7.x is installed
+  set_fact:
+    php74_installed: "{{ php_version_output.stdout is search('PHP 7\\.') }}"
+
+- name: Set fact if PHP 8.x is installed
+  set_fact:
+    php8_installed: "{{ php_version_output.stdout is search('^PHP 8\\.') }}"
+
+- name: Uninstall PHP 8 if 7.4 is requested
+  shell: dnf remove -y php
+  when:
+    - php_version == "7.4"
+    - php8_installed
+    
+- name: Create temp install directory
+  file:
+    path: "{{ php_install_dir }}"
+    state: directory
+    mode: '0644'
+  when: 
+    - php_version == "7.4"
+    - not php74_installed
+
+- name: Copy PHP install assets
+  copy:
+    src: "{{ item }}"
+    dest: "{{ php_install_dir }}/{{ item }}"
+    mode: '0644'
+  with_items:
+    - install.sh
+    - php74-fpm.service
+  when: 
+    - php_version == "7.4"
+    - not php74_installed
+
+- name: Make install script executable
+  file:
+    path: "{{php_install_dir}}/install.sh"
+    mode: '0755'
+  when: 
+    - php_version == "7.4"
+    - not php74_installed
+
+- name: Install PHP 7.4 if requested
+  shell: "{{ php_install_dir }}/install.sh"
+  args:
+    creates: /usr/local/php-7.4/bin/php
+    chdir: "{{ php_install_dir }}"
+  environment:
+    PHP_DOWNLOAD_LINK: "{{ php_download_link }}"
+  when: 
+    - php_version == "7.4"
+    - not php74_installed
+
+- name: Download uninstall script
+  copy:
+    src: uninstall.sh
+    dest: "{{ php_install_dir}}/uninstall.sh"
+    mode: '0755'
+  when: 
+    - php_version != "7.4"
+    - php74_installed
+
+- name: Uninstall PHP 7.4 if switching to another version
+  shell: "{{ php_install_dir }}/uninstall.sh"
+  when:
+    - php_version != "7.4"
+    - php74_installed
+
+- name: Install PHP 8.x via DNF
+  dnf:
+    name: php
+    state: present
+  when: php_version is version('8.0', '>=')
