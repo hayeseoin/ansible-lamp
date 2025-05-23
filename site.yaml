@@ -2,10 +2,14 @@
   hosts: all
   become: true
   roles:
+    - role: mysql
+      vars:
+        mysql_version: "8.0"
+    - role: openjdk
+    - role: tomcat
+    - role: httpd
     - role: php
       vars:
         php_version: "8.4"
-    - role: mysql
-    - role: openjdk
-    - role: httpd
-    - role: tomcat
+        restart_apache_for_php: true
+        php_load_info: true

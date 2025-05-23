@@ -1,0 +1,21 @@
+---
+- name: Create temp install directory
+  file:
+    path: "{{ temp_install_dir }}"
+    state: directory
+    mode: '0644'
+
+- name: Copy MySQL root password script to target
+  copy:
+    src: mysql_root_pw.sh
+    dest: "{{ temp_install_dir }}/mysql_root_pw.sh"
+    mode: '0755'
+
+- name: Run MySQL root password script
+  shell: "{{ temp_install_dir }}/mysql_root_pw.sh"
+
+- name: Clean up temp directory
+  file:
+    path: "{{ temp_install_dir }}"
+    state: absent
+    mode: '0644'

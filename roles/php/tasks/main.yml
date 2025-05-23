@@ -9,15 +9,6 @@
     php74_installed: "{{ php_version_output.stdout is search('PHP 7\\.') }}"
     php8_installed: "{{ php_version_output.stdout is search('^PHP 8\\.') }}"
 
-
-# - name: Set fact if PHP 7.x is installed
-#   set_fact:
-#     php74_installed: "{{ php_version_output.stdout is search('PHP 7\\.') }}"
-
-# - name: Set fact if PHP 8.x is installed
-#   set_fact:
-#     php8_installed: "{{ php_version_output.stdout is search('^PHP 8\\.') }}"
-
 - name: Include PHP 7.4 tasks
   include_tasks: php74.yaml
   when:
@@ -28,3 +19,24 @@
   include_tasks: php8.yaml
   when: 
     - php_version is version('8.0', '>=')
+
+# Option to load the PHP info page for testing purposes. 
+# Apache needs to be restarted after a new version of PHP is installed. 
+
+- name: Load or delete PHP info file
+  include_tasks: load-info.yml
+
+- name: Restart apache
+  shell: systemctl restart httpd
+  when: restart_apache_for_php
+  
+
+# Archive
+
+# - name: Set fact if PHP 7.x is installed
+#   set_fact:
+#     php74_installed: "{{ php_version_output.stdout is search('PHP 7\\.') }}"
+
+# - name: Set fact if PHP 8.x is installed
+#   set_fact:
+#     php8_installed: "{{ php_version_output.stdout is search('^PHP 8\\.') }}"

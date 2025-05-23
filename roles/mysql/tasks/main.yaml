@@ -1,4 +1,20 @@
 ---
+- name: Check if MySQL repo is installed
+  shell: rpm -q {{ mysql_repo }}
+  register: mysql_repo_check
+  changed_when: false
+  failed_when: false  # prevent failure when package not found
+
+- set_fact:
+    mysql_repo_installed: >-
+      {{ 'no such file or directory' in mysql_repo_check.stdout
+      or 'is  to installed' not in mysql_repo_check.stdout }}
+
+- debug:
+    msg: >
+      Is MySQL repo installed? {{ mysql_repo_installed }}
+      raw output: {{ mysql_repo_check.stdout }}
+
 - name: Check if MySQL is installed
   stat:
     path: /usr/bin/mysql
@@ -7,16 +23,17 @@
 - set_fact:
     mysql_installed: "{{ mysql_stat.stat.exists }}"
 
-- name: Get MySQL version
-  shell: mysql --version | awk '{ print $3 }'
-  register: mysql_version_result
-  changed_when: false
+- name: Check for correct MySQL version
+  include_tasks: verify_version.yml
   when: mysql_installed
 
-- set_fact:
-    mysql_version: "{{ mysql_version_result.stdout }}"
-  when: mysql_installed
+- name: Install MySQL repo
+  include_tasks: repo.yml
+  when: mysql_repo_installed
 
-- name: Include MySQL install and init tasks
-  include_tasks: install_init.yml
+- name: Install MySQL
+  include_tasks: install.yml
+
+- name: Set root password if first install
+  include_tasks: init.yml
   when: not mysql_installed

@@ -1,33 +1,5 @@
 ---
-- name: Install apache
-  dnf:
-    name: httpd
-    state: present
+- name: Include install tasks
+  include_tasks: install.yml
 
-- name: Load php conf for PHP 7
-  copy:
-    src: php74-fpm.conf
-    dest: /etc/httpd/conf.d/php74.conf
-  when: php_version == "7.4"
-
-- name: Ensure php74.conf is absent when not using PHP 7.4
-  file:
-    path: /etc/httpd/conf.d/php74.conf
-    state: absent
-  when: php_version != "7.4"
-
-- name: Delete php conf for PHP 7
-  copy:
-    src: php74-fpm.conf
-    dest: /etc/httpd/conf.d/php74.conf
-  when: php_version == "7.4"
-
-- name: Ensure Apache is started and enabled
-  service:
-    name: httpd
-    state: started
-    enabled: true
-
-- name: Reload configs
-  shell: apachectl graceful
 

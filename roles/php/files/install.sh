@@ -25,6 +25,14 @@ ln -s /usr/local/php-7.4/bin/php /usr/bin/php
 ln -s /usr/local/php-7.4/bin/phpize /usr/bin/phpize
 ln -s /usr/local/php-7.4/bin/php-config /usr/bin/php-config
 
+if [ -d /etc/httpd/conf.d ]; then
+  cp php74-fpm.conf /etc/httpd/conf.d/php.conf
+  apachectl graceful
+else
+  echo "Skipping PHP-Apache integration: httpd not installed."
+fi
+
+
 cp php74-fpm.service /etc/systemd/system/php-fpm.service
 systemctl daemon-reload
 systemctl enable php-fpm.service --now

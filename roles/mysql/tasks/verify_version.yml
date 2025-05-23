@@ -1,0 +1,30 @@
+---
+- name: Get installed MySQL version
+  shell: rpm -q --qf "%{VERSION}" mysql-community-server
+  register: mysql_installed_version
+  changed_when: false
+
+- name: Extract major.minor from installed version
+  set_fact:
+    mysql_installed_major_minor: "{{ mysql_installed_version.stdout.split('.')[:2] | join('.') }}"
+  when: mysql_installed_version.stdout is defined
+
+- debug:
+    msg: "MySQL major minor version? {{ mysql_installed_major_minor }}"
+
+- name: Fail if attempting to downgrade MySQL
+  fail:
+    msg: "Downgrading MySQL is not allowed! Installed: {{ mysql_installed_major_minor }}, Requested: {{ mysql_version }}"
+  when: mysql_installed_major_minor is version(mysql_version, '>')
+
+# - name: Fail if version mismatch and MySQL is already installed
+#   fail:
+#     msg: >
+#       Version conflict: Desired version is {{ mysql_version }}, but
+#       {{ mysql_installed_version }} is already installed.
+#       Downgrades are not allowed.
+#   when:
+#     - mysql_installed_version is defined
+#     - mysql_version is defined
+#     - mysql_installed_version is version(mysql_version, '!=') and
+#       mysql_installed_version is version(mysql_version, '>')

@@ -1,17 +1,32 @@
+---
+- name: Create temp install directory
+  file:
+    path: "{{ temp_install_dir }}"
+    state: directory
+    mode: '0644'
+
 - name: Download uninstall script
   copy:
     src: uninstall.sh
-    dest: "{{ php_install_dir}}/uninstall.sh"
+    dest: "{{ temp_install_dir}}/uninstall.sh"
     mode: '0755'
   when: 
     - php74_installed
 
 - name: Uninstall PHP 7.4 if switching to another version
-  shell: " {{ php_install_dir }}/uninstall.sh"
+  shell: " {{ temp_install_dir }}/uninstall.sh"
   when:
     - php74_installed
 
 - name: Install PHP 8.x via DNF
   dnf:
-    name: php
+    name: 
+      - php 
+      - php-common
     state: present
+
+- name: Clean up temp directory
+  file:
+    path: "{{ temp_install_dir }}"
+    state: absent
+    mode: '0644'

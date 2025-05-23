@@ -1,0 +1,10 @@
+---
+- name: PHP Info Present
+  shell: echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/info.php
+  when: php_load_info
+
+- name: PHP info absent
+  file:
+    path: /var/www/html/info.php
+    state: absent
+  when: not php_load_info
