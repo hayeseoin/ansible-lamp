@@ -8,5 +8,5 @@
     tomcat_installed: "{{ tomcat_stat.stat.exists }}"
 
 - name: Include Tomcat install and init tasks
-  include_tasks: install.yml
-  when: not tomcat_installed
+  include_tasks: installsh.yml
+  # when: not tomcat_installed

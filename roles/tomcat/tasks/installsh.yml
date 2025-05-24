@@ -1,0 +1,56 @@
+---
+- name: Create temp install directory
+  file:
+    path: "{{ tomcat_temp_install }}"
+    state: directory
+    mode: '0644'
+
+- name: Create tomcat group
+  group:
+    name: "{{ tomcat_group }}"
+    state: present
+
+- name: Create tomcat home
+  file:
+    name: "{{ tomcat_symlink }}"
+    state: directory
+    mode: '0644'
+    
+- name: Create tomcat user
+  user:
+    name: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    home: "{{ tomcat_symlink }}"
+    shell: /bin/false
+    create_home: no
+    state: present
+
+- name: Download Tomcat archive
+  get_url:
+    url: "{{ tomcat_download_url }}"
+    dest: "{{ tomcat_temp_install }}"
+
+- name: Copy tomcat install assets
+  copy:
+    src: "{{ item }}"
+    dest: "{{ tomcat_temp_install }}/{{ item }}"
+    mode: '0644'
+  with_items:
+    - install.sh
+    - tomcat9.service
+
+- name: Make install script executable
+  file:
+    path: "{{tomcat_temp_install}}/install.sh"
+    mode: '0755'
+
+- name: Install tomcat if requested
+  shell: "{{ tomcat_temp_install }}/install.sh"
+  args:
+    creates: /usr/share/
+    chdir: "{{ tomcat_temp_install }}"
+  environment:
+    TOMCAT_ARCHIVE: "{{ tomcat_archive }}"
+    TOMCAT_INSTALL_LOCATION: "{{ tomcat_install_dir}}"
+    TOMCAT_SYS_HOME: "{{ tomcat_symlink }}"
+    TOMCAT_SERVICE_FILE: tomcat9.service
