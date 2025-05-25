@@ -46,6 +46,8 @@
     chdir: "{{ php_temp_install_dir }}"
   environment:
     PHP_ARCHIVE: "{{ php74_archive }}"
+  notify: "{{ 'reload apache' if php_restart_apache | default (true) else omit }}"
+
 
 - name: Clean up temp directory
   file:

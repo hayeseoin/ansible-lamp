@@ -24,6 +24,8 @@
       - php 
       - php-common
     state: present
+  notify: reload apache
+
 
 - name: Clean up temp directory
   file:
