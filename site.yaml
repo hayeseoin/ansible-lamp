@@ -3,11 +3,9 @@
   hosts: all
   become: true
   roles:
-    # - role: standard-packages
     - role: mysql
       vars:
         mysql_version: "8.0"
-    - role: openjdk
     - role: tomcat
       vars: 
         tomcat_force_reinstall: false

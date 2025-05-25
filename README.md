@@ -1,12 +1,15 @@
 # ansible-lamp
-testing ansible for deploying lamp
 
-For local, if using user-data - Must be run in ansible venv
-`source /opt/ansible-venv/bin/activate`
+# Deploying the playbook
 
-The following command will deploy the local playbooks
-`ansible-playbook -i "localhost," -c local your-playbook.yaml`
+The following command will deploy this playbook locally.
+`ansible-playbook -i "localhost," -c local site.yml`
 
-Or remotely
-`ansible-playbook -i '192.168.1.10,' site.yaml -u ec2-user --private-key ~/.ssh/key.pem`
+This will deploy the playbook remotely.
+`ansible-playbook -i '192.168.1.10,' site.yaml -u ec2-user`
+
+# Apache and PHP
+
+PHP must be installed *after* PHP, as PHP has notify tasks to restart Apache.
+
 
