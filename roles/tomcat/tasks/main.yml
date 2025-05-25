@@ -1,12 +1,15 @@
 ---
-- name: Check if Tomcat is installed
+- name: Check if tomcat is already installed
   stat:
-    path: "{{tomcat_symlink}}"
-  register: tomcat_stat
-
-- set_fact:
-    tomcat_installed: "{{ tomcat_stat.stat.exists }}"
+    path: "{{ tomcat_install_dir }}/{{tomcat_dir_name}}"
+  register: tomcat_is_installed
 
 - name: Include Tomcat install and init tasks
-  include_tasks: installsh.yml
-  # when: not tomcat_installed
+  include_tasks: install.yml
+  when: 
+    - not tomcat_is_installed.stat.exists or tomcat_force_reinstall
+
+- name: Skip install because version is already present
+  debug:
+    msg: "Tomcat {{ tomcat_version }} already installed. Skipping install."
+  when: tomcat_is_installed.stat.exists

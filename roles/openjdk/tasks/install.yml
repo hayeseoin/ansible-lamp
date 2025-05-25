@@ -7,23 +7,35 @@
 
 - name: Create temp install directory
   file:
-    path: "{{ openjdk_install_dir }}"
+    path: "{{ openjdk_temp_install_dir }}"
     state: directory
     mode: '0644'
+
+- name: Download Java from URL
+  get_url:
+    url: "{{ openjdk_download_url }}"
+    dest: "{{ openjdk_temp_install_dir }}"
 
 - name: Copy JDK install script
   copy:
     src: install.sh
-    dest: "{{ openjdk_install_dir }}/install.sh"
+    dest: "{{ openjdk_temp_install_dir }}/install.sh"
     mode: '0755'
 
 - name: Install Java with script
-  shell: "{{ openjdk_install_dir }}/install.sh"
+  shell: "{{ openjdk_temp_install_dir }}/install.sh"
   args:
     creates: "{{ java_install_dir }}/{{ jdk_version }}"
-    chdir: "{{ openjdk_install_dir }}"
+    chdir: "{{ openjdk_temp_install_dir }}"
   environment:
     OPT_JAVA: "{{ java_home }}"
     JDK_VERSION: "{{ jdk_version }}"
+    JAVA_ARCHIVE: "{{ java_archive_name }}"
     JAVA_INSTALL_DIR: "{{ java_install_dir }}"
     OPENJDK_DOWNLOAD_URL: "{{ openjdk_download_url }}"
+
+- name: Clean up temp directory
+  file:
+    path: "{{ openjdk_temp_install_dir }}"
+    state: absent
+    mode: '0644'

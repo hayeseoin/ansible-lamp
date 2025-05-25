@@ -1,20 +1,20 @@
 ---
 - name: Create temp install directory
   file:
-    path: "{{ temp_install_dir }}"
+    path: "{{ php_temp_install_dir }}"
     state: directory
     mode: '0644'
 
 - name: Download uninstall script
   copy:
     src: uninstall.sh
-    dest: "{{ temp_install_dir}}/uninstall.sh"
+    dest: "{{ php_temp_install_dir}}/uninstall.sh"
     mode: '0755'
   when: 
     - php74_installed
 
 - name: Uninstall PHP 7.4 if switching to another version
-  shell: " {{ temp_install_dir }}/uninstall.sh"
+  shell: " {{ php_temp_install_dir }}/uninstall.sh"
   when:
     - php74_installed
 
@@ -27,6 +27,6 @@
 
 - name: Clean up temp directory
   file:
-    path: "{{ temp_install_dir }}"
+    path: "{{ php_temp_install_dir }}"
     state: absent
     mode: '0644'

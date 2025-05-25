@@ -1,24 +1,24 @@
 ---
 - name: Create temp install directory
   file:
-    path: "{{ temp_install_dir }}"
+    path: "{{ mysql_temp_install_dir }}"
     state: directory
     mode: '0644'
 
 - name: Copy MySQL 8.0 repo RPM to target
   copy:
     src: "{{ mysql_repo }}"
-    dest: "{{ temp_install_dir }}/{{ mysql_repo }}"
+    dest: "{{ mysql_temp_install_dir }}/{{ mysql_repo }}"
     mode: '0644'
 
 - name: Install MySQL 8.4 community release RPM
   dnf:
     disable_gpg_check: true
-    name: "{{ temp_install_dir }}/{{ mysql_repo }}"
+    name: "{{ mysql_temp_install_dir }}/{{ mysql_repo }}"
     state: present
 
 - name: Clean up temp directory
   file:
-    path: "{{ temp_install_dir }}"
+    path: "{{ mysql_temp_install_dir }}"
     state: absent
     mode: '0644'

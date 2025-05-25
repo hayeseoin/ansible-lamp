@@ -1,3 +1,4 @@
+---
 - name: Setup server stack
   hosts: all
   become: true
@@ -7,6 +8,9 @@
         mysql_version: "8.0"
     - role: openjdk
     - role: tomcat
+      vars: 
+        tomcat_force_reinstall: false
+        tomcat_version: "9.0.98"
     - role: httpd
     - role: php
       vars:

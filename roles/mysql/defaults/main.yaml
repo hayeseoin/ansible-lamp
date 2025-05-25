@@ -1,5 +1,5 @@
 mysql_version: "8.0"
-temp_install_dir: "/tmp/mysql_install"
+mysql_temp_install_dir: "/tmp/mysql_install"
 mysql_repo_dir: "/opt/mysql_repo"
 mysql_repo: "mysql84-community-release-el9-1.noarch.rpm"
 mysql_init_script: "mysql_root_pw.sh"

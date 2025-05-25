@@ -1,11 +1,23 @@
-tomcat_temp_install: /tmp/tomcat
+tomcat_temp_install_dir: /tmp/tomcat
+
 tomcat_major_version: "9"
 tomcat_version: "9.0.105"
-tomcat_download_url: "https://dlcdn.apache.org/tomcat/tomcat-9/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
-tomcat_install_dir: "/usr/share"
-tomcat_name: "apache-tomcat-{{ tomcat_version }}"
-tomcat_tarball: "apache-tomcat-{{ tomcat_version }}.tar.gz"
-tomcat_symlink: "/usr/share/tomcat{{ tomcat_major_version }}"
+tomcat_download_url: "https://archive.apache.org/dist/tomcat/tomcat-{{ tomcat_major_version }}/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
+tomcat_download_url_old: "https://dlcdn.apache.org/tomcat/tomcat-{{ tomcat_major_version }}/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
+tomcat_service_name: "tomcat{{ tomcat_major_version }}"
+tomcat_force_reinstall: false
+
 tomcat_group: tomcat
 tomcat_user: tomcat
+
+# Install script variables
 tomcat_archive: "apache-tomcat-{{ tomcat_version }}.tar.gz"
+tomcat_install_dir: "/usr/share"
+tomcat_symlink: "/usr/share/tomcat{{ tomcat_major_version }}"
+tomcat_dir_name: "apache-tomcat-{{ tomcat_version }}"
+tomcat_service_file: "{{ tomcat_service_name }}.service"
+
+# Archive
+tomcat_name: "apache-tomcat-{{ tomcat_version }}"
+tomcat_tarball: "apache-tomcat-{{ tomcat_version }}.tar.gz"
+

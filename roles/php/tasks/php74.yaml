@@ -5,14 +5,14 @@
     
 - name: Create temp install directory
   file:
-    path: "{{ temp_install_dir }}"
+    path: "{{ php_temp_install_dir }}"
     state: directory
     mode: '0644'
 
 - name: Copy PHP install assets
   copy:
     src: "{{ item }}"
-    dest: "{{ temp_install_dir }}/{{ item }}"
+    dest: "{{ php_temp_install_dir }}/{{ item }}"
     mode: '0644'
   with_items:
     - install.sh
@@ -21,20 +21,20 @@
 
 - name: Make install script executable
   file:
-    path: "{{temp_install_dir}}/install.sh"
+    path: "{{php_temp_install_dir}}/install.sh"
     mode: '0755'
 
 - name: Install PHP 7.4 if requested
-  shell: "{{ temp_install_dir }}/install.sh"
+  shell: "{{ php_temp_install_dir }}/install.sh"
   args:
     creates: /usr/local/php-7.4/bin/php
-    chdir: "{{ temp_install_dir }}"
+    chdir: "{{ php_temp_install_dir }}"
   environment:
     PHP_DOWNLOAD_LINK: "{{ php_download_link }}"
 
 - name: Clean up temp directory
   file:
-    path: "{{ temp_install_dir }}"
+    path: "{{ php_temp_install_dir }}"
     state: absent
     mode: '0644'
 

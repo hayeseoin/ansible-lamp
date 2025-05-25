@@ -1,60 +1,84 @@
 ---
 - name: Create temp install directory
   file:
-    path: "{{ tomcat_temp_install }}"
+    path: "{{ tomcat_temp_install_dir }}"
     state: directory
     mode: '0644'
 
 - name: Create tomcat group
   group:
-    name: tomcat
-
+    name: "{{ tomcat_group }}"
+    state: present
+    
 - name: Create tomcat user
   user:
-    name: tomcat
-    group: tomcat
-    home: /home/tomcat
+    name: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    home: "{{ tomcat_symlink }}"
     shell: /bin/false
     create_home: no
-
-- name: Create installation directory
-  file:
-    path: "{{tomcat_install_dir}}"
-    state: directory
-    owner: tomcat
-    group: tomcat
-    mode: '0755'
+    state: present
 
 - name: Download Tomcat archive
   get_url:
     url: "{{ tomcat_download_url }}"
-    dest: "{{ tomcat_temp_install}}/{{ tomcat_tarball }}"
+    dest: "{{ tomcat_temp_install_dir }}"
+
+- name: Copy tomcat install assets
+  copy:
+    src: "{{ item }}"
+    dest: "{{ tomcat_temp_install_dir }}/{{ item }}"
+    mode: '0644'
+  with_items:
+    - install.sh
+    - "{{ tomcat_service_file }}"
+
+- name: Make install script executable
+  file:
+    path: "{{tomcat_temp_install_dir}}/install.sh"
+    mode: '0755'
+
+- name: Remove existing Tomcat version (on force reinstall)
+  file:
+    path: "{{ tomcat_install_dir}}/{{ tomcat_dir_name }}"
+    state: absent
+  when: tomcat_force_reinstall
+
+- name: Install tomcat if requested
+  shell: "{{ tomcat_temp_install_dir }}/install.sh > /tmp/tomcat_install_log.txt"
+  args:
+    # creates: /usr/share/
+    chdir: "{{ tomcat_temp_install_dir }}"
+  environment:
+    TOMCAT_ARCHIVE: "{{ tomcat_archive }}"
+    TOMCAT_INSTALL_LOCATION: "{{ tomcat_install_dir}}"
+    TOMCAT_SYS_HOME: "{{ tomcat_symlink }}"
+    TOMCAT_DIR_NAME: "{{ tomcat_dir_name }}"
+    TOMCAT_SERVICE_FILE: "{{ tomcat_service_file }}"
+
+- name: Ensure tomcat is started and enabled
+  service:
+    name: "{{ tomcat_service_name }}"
+    state: restarted
+    enabled: true
+
+- name: Find old tomcats
+  find:
+    paths: "{{ tomcat_install_dir }}"
+    patterns: "apache-tomcat-*"
+    file_type: directory
+  register: tomcat_dirs
+
+- name: Clean up temp directory
+  file:
+    path: "{{ tomcat_temp_install_dir }}"
+    state: absent
     mode: '0644'
 
-- name: Extract Tomcat
-  shell: "tar -zxf {{ tomcat_temp_install}}/{{ tomcat_tarball }} -C {{tomcat_install_dir}}/"
-
-- name: Symlink current to latest version
+- name: Remove old Tomcat versions
   file:
-    src: "{{tomcat_install_dir}}/{{ tomcat_name}}"
-    dest: "{{tomcat_symlink}}"
-    state: link
-
-- name: Change ownership
-  file:
-    path: "{{tomcat_symlink}}"
-    state: directory
-    recurse: yes
-    owner: tomcat
-    group: tomcat
-
-- name: Add tomcat9 service file
-  copy:
-    src: tomcat9.service
-    dest: /etc/systemd/system/tomcat9.service
-
-- name: Enable and start Tomcat
-  systemd:
-    name: tomcat9
-    enabled: yes
-    state: started
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ tomcat_dirs.files }}"
+  when: item.path != (tomcat_install_dir + '/apache-tomcat-' + tomcat_version)
+  become: true
