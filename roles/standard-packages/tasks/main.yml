@@ -1,0 +1,8 @@
+- name: Ensure required tools are installed
+  package:
+    name:
+      - tar
+      - curl
+      - unzip
+      - vim
+    state: present

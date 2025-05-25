@@ -1,3 +1,4 @@
 php_temp_install_dir: /tmp/php_install
-php_download_link: "https://github.com/hayeseoin/al2023-php74/raw/refs/heads/main/php-7.4.tar.gz"
+php74_download_link: "https://github.com/hayeseoin/al2023-php74/raw/refs/heads/main/php-7.4.tar.gz"
+php74_archive: "php-7.4.tar.gz"
 php_version: "7.4"

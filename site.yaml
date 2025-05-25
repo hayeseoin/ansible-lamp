@@ -3,6 +3,7 @@
   hosts: all
   become: true
   roles:
+    # - role: standard-packages
     - role: mysql
       vars:
         mysql_version: "8.0"
@@ -10,7 +11,7 @@
     - role: tomcat
       vars: 
         tomcat_force_reinstall: false
-        tomcat_version: "9.0.98"
+        tomcat_version: "9.0.105"
     - role: httpd
     - role: php
       vars:

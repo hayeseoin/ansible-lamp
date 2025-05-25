@@ -1,4 +1,9 @@
 ---
+- name: Ensure required tools are installed
+  package:
+    name:
+      - tar
+
 - name: Create temp install directory
   file:
     path: "{{ tomcat_temp_install_dir }}"

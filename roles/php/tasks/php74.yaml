@@ -1,3 +1,13 @@
+- name: Ensure required tools are installed
+  package:
+    name:
+      - tar
+      - libicu 
+      - libxslt 
+      - oniguruma 
+      - libedit 
+      - libuuid
+
 - name: Uninstall PHP 8 if 7.4 is requested
   shell: dnf remove -y php*
   when:
@@ -8,6 +18,11 @@
     path: "{{ php_temp_install_dir }}"
     state: directory
     mode: '0644'
+
+- name: Download PHP archive
+  get_url:
+    url: "{{ php74_download_link }}"
+    dest: "{{ php_temp_install_dir }}"
 
 - name: Copy PHP install assets
   copy:
@@ -30,7 +45,7 @@
     creates: /usr/local/php-7.4/bin/php
     chdir: "{{ php_temp_install_dir }}"
   environment:
-    PHP_DOWNLOAD_LINK: "{{ php_download_link }}"
+    PHP_ARCHIVE: "{{ php74_archive }}"
 
 - name: Clean up temp directory
   file:
