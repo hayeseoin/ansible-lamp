@@ -1,0 +1,10 @@
+---
+- name: Load OpenJDK 11 manifest
+  include_vars:
+    file: files/openjdk11.yml
+    name: openjdk11_local_manifest
+
+- name: Load Tomcat 9 manifest
+  include_vars:
+    file: files/tomcat9.yml
+    name: tomcat9_local_manifest

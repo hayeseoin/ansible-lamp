@@ -1,0 +1,15 @@
+- name: Define list of supported Tomcat versions (hardcoded for now)
+  set_fact:
+    supported_tomcat_versions: "{{ tomcat9_local_manifest.tomcat9 | map(attribute='version') | list }}"
+
+
+- name: Preflight check - validate requested Tomcat version
+  fail:
+    msg: "Invalid tomcat_version. '{{ tomcat_version }}' is not a valid version of tomcat9. }}"
+  when: 
+    -  tomcat_version not in supported_tomcat_versions
+
+
+- name: Debug selected version
+  debug:
+    msg: "Using Tomcat version {{ tomcat9_local_manifest }}"

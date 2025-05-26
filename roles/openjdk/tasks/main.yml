@@ -1,7 +1,16 @@
 ---
+- name: Resolve desired_java
+  set_fact:
+    desired_java: >-
+      {{
+        openjdk11_local_manifest.openjdk11
+        | selectattr('version', 'equalto', jdk_version)
+        | list | first
+      }}
+
 - name: Check if java is installed
   stat:
-    path: "{{java_install_dir}}/{{ jdk_version }}"
+    path: "{{java_install_dir}}/{{ desired_java.java_name }}/bin"
   register: java_stat
 
 - set_fact:

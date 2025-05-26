@@ -1,0 +1,35 @@
+---
+# - name: Load Tomcat version manifest
+#   include_vars:
+#     file: "{{ playbook_dir }}/roles/manifest/files/tomcat9.yml"
+#     name: tomcat9_manifest
+
+- name: Validate tomcat_version
+  fail:
+    msg: >-
+      Invalid tomcat_version '{{ tomcat_version }}'.
+      Must be one of: {{ tomcat9_local_manifest.tomcat9 | map(attribute='version') | join(', ') }}
+  when: >
+    (tomcat9_local_manifest.tomcat9 | selectattr('version', 'equalto', tomcat_version) | list | length) == 0
+
+- name: Validate jdk_version
+  fail:
+    msg: >-
+      Invalid jdk_version '{{ jdk_version }}'.
+      Must be one of: {{ openjdk11_local_manifest.openjdk11 | map(attribute='version') | join(', ') }}
+  when: >
+    (openjdk11_local_manifest.openjdk11 | selectattr('version', 'equalto', jdk_version) | list | length) == 0
+
+- name: Validate PHP version
+  fail:
+    msg: >-
+      Invalid PHP version '{{ php_version }}'.
+      Supported versions: {{ supported_php_versions | join(', ') }}
+  when: php_version not in supported_php_versions
+
+- name: Validate MySQL version
+  fail:
+    msg: >-
+      Invalid MySQL version '{{ mysql_version }}'.
+      Supported versions: {{ supported_mysql_versions | join(', ') }}
+  when: mysql_version not in supported_mysql_versions

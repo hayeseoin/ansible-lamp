@@ -1,0 +1,5 @@
+# Maintained manually
+php74:
+  version: "7.4"
+  name: "php74"
+  public_download_url: "https://github.com/hayeseoin/al2023-php74/raw/refs/heads/main/php-7.4.tar.gz"

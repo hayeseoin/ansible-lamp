@@ -1,0 +1,16 @@
+# MySQL variables
+mysql_version: "8.4"
+# Tomcat Variables
+tomcat_version: "latest"
+jdk_version: "latest"
+# PHP variables
+php_version: "8.4"
+php_load_info: true
+
+# Supported versions - do not edit
+supported_php_versions:
+  - "7.4"
+  - "8.4"
+supported_mysql_versions:
+  - "8.0"
+  - "8.4"

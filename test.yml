@@ -1,0 +1,22 @@
+---
+- name: test custom manifest
+  hosts: all
+  become: true
+  roles:
+      - manifest
+      # - test_roles
+
+- name: Preflight validation for all roles
+  hosts: all
+  gather_facts: false
+  vars:
+    tomcat_version: "9.0.85"   # or pass via --extra-vars
+  tasks:
+    - name: Run Tomcat preflight validation
+      include_role:
+        name: test_roles
+        tasks_from: preflight
+
+    - name: Print check passed
+      debug:
+        msg: "Reached the next step"

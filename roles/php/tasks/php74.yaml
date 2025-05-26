@@ -1,5 +1,5 @@
 - name: Ensure required tools are installed
-  package:
+  dnf:
     name:
       - tar
       - libicu 
@@ -7,6 +7,7 @@
       - oniguruma 
       - libedit 
       - libuuid
+    state: present
 
 - name: Uninstall PHP 8 if 7.4 is requested
   shell: dnf remove -y php*
@@ -46,7 +47,7 @@
     chdir: "{{ php_temp_install_dir }}"
   environment:
     PHP_ARCHIVE: "{{ php74_archive }}"
-  notify: "{{ 'reload apache' if php_restart_apache | default (true) else omit }}"
+  notify: "{{ 'restart apache' if php_restart_apache }}"
 
 
 - name: Clean up temp directory

@@ -11,9 +11,18 @@
     state: directory
     mode: '0644'
 
+- name: Resolve desired_java
+  set_fact:
+    desired_tomcat: >-
+      {{
+        openjdk11_local_manifest.tomcat9
+        | selectattr('version', 'equalto', java_version)
+        | list | first
+      }}
+
 - name: Download Java from URL
   get_url:
-    url: "{{ desired_java.public_download_url }}"
+    url: "{{ openjdk_download_url }}"
     dest: "{{ openjdk_temp_install_dir }}"
 
 - name: Copy JDK install script
@@ -29,28 +38,13 @@
     chdir: "{{ openjdk_temp_install_dir }}"
   environment:
     OPT_JAVA: "{{ java_home }}"
-    JDK_VERSION: "{{ desired_java.java_name }}"
-    JAVA_ARCHIVE: "{{ desired_java.archive_name }}"
+    JDK_VERSION: "{{ jdk_version }}"
+    JAVA_ARCHIVE: "{{ java_archive_name }}"
     JAVA_INSTALL_DIR: "{{ java_install_dir }}"
-  notify: restart tomcat
+    OPENJDK_DOWNLOAD_URL: "{{ openjdk_download_url }}"
 
 - name: Clean up temp directory
   file:
     path: "{{ openjdk_temp_install_dir }}"
     state: absent
     mode: '0644'
-
-- name: Find old javas
-  find:
-    paths: "{{ java_install_dir }}"
-    patterns: "jdk-*"
-    file_type: directory
-  register: java_dirs
-
-- name: Remove old Java versions
-  file:
-    path: "{{ item.path }}"
-    state: absent
-  loop: "{{ java_dirs.files }}"
-  when: item.path != (java_install_dir + '/' + desired_java.java_name)
-  become: true

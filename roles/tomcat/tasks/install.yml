@@ -3,6 +3,7 @@
   package:
     name:
       - tar
+    state: present
 
 - name: Create temp install directory
   file:
@@ -26,7 +27,7 @@
 
 - name: Download Tomcat archive
   get_url:
-    url: "{{ tomcat_download_url }}"
+    url: "{{ desired_tomcat.public_download_url }}"
     dest: "{{ tomcat_temp_install_dir }}"
 
 - name: Copy tomcat install assets
@@ -55,17 +56,24 @@
     # creates: /usr/share/
     chdir: "{{ tomcat_temp_install_dir }}"
   environment:
-    TOMCAT_ARCHIVE: "{{ tomcat_archive }}"
-    TOMCAT_INSTALL_LOCATION: "{{ tomcat_install_dir}}"
+    TOMCAT_ARCHIVE: "{{ desired_tomcat.archive_name }}"
+    TOMCAT_INSTALL_LOCATION: "{{ tomcat_install_dir }}"
     TOMCAT_SYS_HOME: "{{ tomcat_symlink }}"
-    TOMCAT_DIR_NAME: "{{ tomcat_dir_name }}"
+    TOMCAT_DIR_NAME: "{{ desired_tomcat.tomcat_name }}"
     TOMCAT_SERVICE_FILE: "{{ tomcat_service_file }}"
+  notify: restart tomcat
 
-- name: Ensure tomcat is started and enabled
-  service:
-    name: "{{ tomcat_service_name }}"
-    state: restarted
-    enabled: true
+# - name: Ensure tomcat is started and enabled
+#   service:
+#     name: "{{ tomcat_service_name }}"
+#     state: restarted
+#     enabled: true
+
+- name: Clean up temp directory
+  file:
+    path: "{{ tomcat_temp_install_dir }}"
+    state: absent
+    mode: '0644'
 
 - name: Find old tomcats
   find:
@@ -74,16 +82,10 @@
     file_type: directory
   register: tomcat_dirs
 
-- name: Clean up temp directory
-  file:
-    path: "{{ tomcat_temp_install_dir }}"
-    state: absent
-    mode: '0644'
-
 - name: Remove old Tomcat versions
   file:
     path: "{{ item.path }}"
     state: absent
   loop: "{{ tomcat_dirs.files }}"
-  when: item.path != (tomcat_install_dir + '/apache-tomcat-' + tomcat_version)
+  when: item.path != (tomcat_install_dir + '/' + desired_tomcat.tomcat_name)
   become: true

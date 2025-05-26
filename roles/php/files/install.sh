@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-# export PHP_DOWNLOAD_LINK="ttps://github.com/hayeseoin/al2023-php74/raw/refs/heads/main/php-7.4.tar.gz"
+# export PHP_DOWNLOAD_LINK="https://github.com/hayeseoin/al2023-php74/raw/refs/heads/main/php-7.4.tar.gz"
 # export PHP_NAME="php-7.4.tar.gz"
 # wget -N $PHP_DOWNLOAD_LINK
 

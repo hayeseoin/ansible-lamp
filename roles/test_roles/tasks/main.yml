@@ -1,0 +1,16 @@
+- name: Print download URL of first Tomcat 9 version
+  debug:
+    msg: "Download from {{ tomcat9_local_manifest.tomcat9[0].public_download_url }}"
+
+- name: Set desired Tomcat version
+  set_fact:
+    desired_tomcat: "{{ tomcat9_local_manifest.tomcat9 | selectattr('version', 'equalto', tomcat_version) | list | first }}"
+
+- name: Print tomcat version details
+  debug:
+    msg: >
+      Version is: {{ desired_tomcat.version }} 
+      Public download url is: {{ desired_tomcat.public_download_url }}
+      Name is: {{ desired_tomcat.tomcat_name }}
+      Archive name is: {{ desired_tomcat.archive_name }}
+

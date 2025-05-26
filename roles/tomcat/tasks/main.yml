@@ -1,7 +1,16 @@
 ---
+- name: Resolve desired_tomcat
+  set_fact:
+    desired_tomcat: >-
+      {{
+        tomcat9_local_manifest.tomcat9
+        | selectattr('version', 'equalto', tomcat_version)
+        | list | first
+      }}
+      
 - name: Check if tomcat is already installed
   stat:
-    path: "{{ tomcat_install_dir }}/{{tomcat_dir_name}}"
+    path: "{{ tomcat_install_dir }}/{{desired_tomcat.tomcat_name}}"
   register: tomcat_is_installed
 
 - name: Include Tomcat install and init tasks

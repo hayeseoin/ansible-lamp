@@ -24,7 +24,7 @@
       - php 
       - php-common
     state: present
-  notify: reload apache
+  notify: "{{ 'restart apache' if php_restart_apache }}"
 
 
 - name: Clean up temp directory
